@@ -23,12 +23,16 @@ export class UsersResolver {
     private prisma: PrismaService,
   ) {}
 
+  @Query(() => [User])
+  async users() {
+    return this.usersService.findAll();
+  }
+
   @Query(() => User)
   async me(@UserEntity() user: User): Promise<User> {
     return user;
   }
 
-  @UseGuards(GqlAuthGuard)
   @Mutation(() => User)
   async updateUser(
     @UserEntity() user: User,
@@ -37,7 +41,6 @@ export class UsersResolver {
     return this.usersService.updateUser(user.id, newUserData);
   }
 
-  @UseGuards(GqlAuthGuard)
   @Mutation(() => User)
   async changePassword(
     @UserEntity() user: User,

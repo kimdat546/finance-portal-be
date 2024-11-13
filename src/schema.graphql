@@ -43,6 +43,7 @@ type Query {
   hello(name: String!): String!
   helloWorld: String!
   me: User!
+  users: [User!]!
 }
 
 input SignupInput {

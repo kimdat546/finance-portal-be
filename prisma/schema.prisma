@@ -22,5 +22,210 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  wallets       Wallet[]
+  categories    Category[]
+  transactions  Transaction[]
+  budgets       Budget[]
+  notifications Notification[]
+  debts         Debt[]
+  savingsPlans  SavingsPlan[]
+  investments   Investment[]
+
   @@map("users")
+}
+
+model Wallet {
+  id            String     @id @default(dbgenerated("uuid_generate_v4()")) @map("id")
+  userId        String     @map("user_id")
+  name          String?
+  bankName      String?    @map("bank_name")
+  accountNumber String?    @unique @map("account_number")
+  walletType    WalletType @map("wallet_type") // bank, e-wallet, etc.
+  balance       Decimal    @default(0)
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+
+  user           User             @relation(fields: [userId], references: [id])
+  cards          Card[]
+  budget         Budget[]
+  transactions   Transaction[]
+  BalanceHistory BalanceHistory[]
+
+  @@map("wallets")
+}
+
+model Category {
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @map("id")
+  userId    String   @map("user_id")
+  name      String
+  icon      String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user         User          @relation(fields: [userId], references: [id])
+  transactions Transaction[]
+  budgets      Budget[]
+
+  @@map("categories")
+}
+
+model Card {
+  id             String        @id @default(dbgenerated("uuid_generate_v4()")) @map("id")
+  walletId       String        @map("wallet_id")
+  cardType       CardType      @map("card_type") // credit, debit, etc.
+  cardNumber     String        @unique @map("card_number")
+  expirationDate DateTime?     @map("expiration_date")
+  cardProvider   CardProvider? @map("card_provider") // visa, mastercard, etc.
+  creditLimit    Decimal?      @map("credit_limit")
+  cashbackRate   Decimal?      @map("cashback_rate")
+  pointsRate     Decimal?      @map("points_rate")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  wallet Wallet @relation(fields: [walletId], references: [id])
+
+  @@map("cards")
+}
+
+model Transaction {
+  id               String          @id @default(dbgenerated("uuid_generate_v4()")) @map("id")
+  userId           String          @map("user_id")
+  walletId         String          @map("wallet_id")
+  categoryId       String?         @map("category_id")
+  debtId           String?         @map("debt_id") // link to Debt model if applicable
+  savingsPlanId    String?         @map("savings_plan_id") // link to SavingsPlan model if applicable
+  amount           Decimal
+  description      String?
+  transactionType  TransactionType @map("transaction_type") // income, expense, transfer
+  recipientAccount String?         @map("recipient_account") // for transfer transactions
+  refNumber        String?         @map("ref_number") // reference number for transactions
+  date             DateTime        @default(now())
+  // recurrence       String?  @map("recurrence") // daily, weekly, monthly, yearly
+  // status           String?  @map("status") // completed, pending, failed
+  // taxDeductible    Boolean? @default(false) // for tax-related tracking
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+
+  user        User         @relation(fields: [userId], references: [id])
+  wallet      Wallet       @relation(fields: [walletId], references: [id])
+  category    Category?    @relation(fields: [categoryId], references: [id])
+  debt        Debt?        @relation(fields: [debtId], references: [id])
+  savingsPlan SavingsPlan? @relation(fields: [savingsPlanId], references: [id])
+
+  @@map("transactions")
+}
+
+model Budget {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @map("id")
+  userId     String    @map("user_id")
+  categoryId String?   @map("category_id")
+  walletId   String?   @map("wallet_id")
+  amount     Decimal
+  startDate  DateTime? @map("start_date")
+  endDate    DateTime? @map("end_date")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  user     User      @relation(fields: [userId], references: [id])
+  category Category? @relation(fields: [categoryId], references: [id])
+  wallet   Wallet?   @relation(fields: [walletId], references: [id])
+
+  @@map("budgets")
+}
+
+model Notification {
+  id          String   @id @default(dbgenerated("uuid_generate_v4()")) @map("id")
+  userId      String   @map("user_id")
+  message     String
+  triggerDate DateTime @map("trigger_date")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+model Debt {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @map("id")
+  userId     String    @map("user_id")
+  lenderName String    @map("lender_name")
+  amount     Decimal
+  dueDate    DateTime? @map("due_date")
+  repaid     Boolean   @default(false)
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  user        User          @relation(fields: [userId], references: [id])
+  Transaction Transaction[]
+
+  @@map("debts")
+}
+
+model SavingsPlan {
+  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @map("id")
+  userId        String    @map("user_id")
+  goalName      String    @map("goal_name")
+  targetAmount  Decimal   @map("target_amount")
+  currentAmount Decimal   @default(0) @map("current_amount")
+  targetDate    DateTime? @map("target_date")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user        User          @relation(fields: [userId], references: [id])
+  Transaction Transaction[]
+
+  @@map("savings_plans")
+}
+
+model Investment {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @map("id")
+  userId         String    @map("user_id")
+  assetName      String    @map("asset_name")
+  investedAmount Decimal   @map("invested_amount")
+  currentValue   Decimal?  @map("current_value")
+  purchaseDate   DateTime? @map("purchase_date")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("investments")
+}
+
+model BalanceHistory {
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @map("id")
+  walletId  String   @map("wallet_id")
+  balance   Decimal
+  date      DateTime @default(now())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  wallet Wallet @relation(fields: [walletId], references: [id])
+
+  @@map("balance_history")
+}
+
+enum WalletType {
+  BANK
+  E_WALLET
+}
+
+enum CardType {
+  CREDIT
+  DEBIT
+}
+
+enum CardProvider {
+  VISA
+  MASTERCARD
+  AMERICAN_EXPRESS
+  DISCOVER
+  JCB
+  DINERS_CLUB
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
 }

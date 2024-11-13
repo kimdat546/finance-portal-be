@@ -479,3 +479,38 @@ providers: [
 After you configured the Interceptor and retrieved the `TOKEN` from storage your request will succeed on resolvers with `@UseGuards(GqlAuthGuard)`.
 
 **[⬆ back to top](#overview)**
+
+Using both REST and GraphQL in the same project can be a strategic decision to leverage the strengths of each approach. Here are some strategies and guidelines to help you decide which type of API to use for different scenarios:
+
+Strategies for Using Both REST and GraphQL
+Use GraphQL for:
+Complex Queries: When you need to fetch related data from multiple sources in a single request. For example, fetching a user along with their posts and comments.
+Client-Specific Queries: When different clients (web, mobile) need different subsets of data. GraphQL allows clients to request exactly the data they need.
+Real-time Data: When you need real-time updates via subscriptions. For example, live chat applications or real-time notifications.
+Aggregated Data: When you need to aggregate data from multiple sources or services.
+Use REST for:
+Simple CRUD Operations: When you have straightforward create, read, update, delete operations. For example, creating or updating a user profile.
+File Uploads/Downloads: When dealing with file uploads or downloads, REST is generally simpler and more efficient.
+Public APIs: When exposing public APIs that need to be easily consumed by third-party developers. REST APIs are more widely understood and have extensive tooling support.
+Large Data Sets: When fetching large data sets where pagination and caching are critical. REST can be more efficient with proper use of HTTP caching and pagination headers.
+Example Scenarios
+
+1. Fetching a List of Blogs (Large Data Set)
+Use REST: Fetching a large list of blogs can benefit from REST's built-in support for pagination and caching.
+2. Fetching a User with Related Data (Complex Query)
+Use GraphQL: Fetching a user along with their posts and comments in a single request.
+3. Creating or Updating a User Profile (Simple CRUD)
+Use REST: Simple create or update operations can be handled efficiently with REST.
+4. Real-time Notifications (Real-time Data)
+Use GraphQL: Subscriptions can be used to receive real-time notifications.
+Implementation Example
+REST API for Blogs
+File: src/blogs/blogs.controller.ts
+
+GraphQL API for Users
+File: users.resolver.ts
+
+Summary
+Use GraphQL for complex queries, client-specific data needs, real-time updates, and aggregated data.
+Use REST for simple CRUD operations, file uploads/downloads, public APIs, and large data sets with pagination and caching.
+By strategically using both REST and GraphQL, you can optimize your API design to leverage the strengths of each approach, providing a more flexible and efficient solution for different use cases.

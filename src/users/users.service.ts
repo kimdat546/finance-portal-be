@@ -11,6 +11,14 @@ export class UsersService {
     private passwordService: PasswordService,
   ) {}
 
+  async findAll() {
+    return this.prisma.user.findMany();
+  }
+
+  async findOne(id: string) {
+    return this.prisma.user.findUnique({ where: { id } });
+  }
+
   updateUser(userId: string, newUserData: UpdateUserInput) {
     return this.prisma.user.update({
       data: newUserData,
