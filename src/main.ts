@@ -51,14 +51,12 @@ async function bootstrap() {
 
     SwaggerModule.setup(swaggerConfig.path || 'api', app, document);
   }
-
   // Cors
   if (corsConfig.enabled) {
-    app.enableCors();
-    // app.enableCors({
-    //   origin: ENV.ORIGIN_DOMAIN,
-    //   credentials: true,
-    // });
+    app.enableCors({
+      origin: 'http://127.0.0.1:5173',
+      credentials: true,
+    });
   }
 
   await app.listen(process.env.PORT || nestConfig.port || 3000);

@@ -6,15 +6,15 @@ Starter template for 😻 [NestJS](https://nestjs.com/) and [Prisma](https://www
 
 ## Version
 
-| Branch                                                                                                       |  Nest | Prisma                                               |  Graphql                                                              |
-| ------------------------------------------------------------------------------------------------------------ | ----- | ---------------------------------------------------- | --------------------------------------------------------------------- |
-| main                                                                                                       | v9    | [v4](https://github.com/prisma/prisma)         | [Code-first](https://docs.nestjs.com/graphql/quick-start#code-first)  |
-| [nest-8-prisma-3](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-8-prisma-3)                                                                                                       | v8    | [v3](https://github.com/prisma/prisma)         | [Code-first](https://docs.nestjs.com/graphql/quick-start#code-first)  |
-| [nest-7](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-7)                                                                                                       | v7    | [v2](https://github.com/prisma/prisma2)         | [Code-first](https://docs.nestjs.com/graphql/quick-start#code-first)  |
+| Branch                                                                                                              |  Nest | Prisma                                          |  Graphql                                                              |
+| ------------------------------------------------------------------------------------------------------------------- | ----- | ----------------------------------------------- | --------------------------------------------------------------------- |
+| main                                                                                                                | v9    | [v4](https://github.com/prisma/prisma)          | [Code-first](https://docs.nestjs.com/graphql/quick-start#code-first)  |
+| [nest-8-prisma-3](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-8-prisma-3)                     | v8    | [v3](https://github.com/prisma/prisma)          | [Code-first](https://docs.nestjs.com/graphql/quick-start#code-first)  |
+| [nest-7](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-7)                                       | v7    | [v2](https://github.com/prisma/prisma2)         | [Code-first](https://docs.nestjs.com/graphql/quick-start#code-first)  |
 | [nest-6-prisma2-code-first](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-6-prisma2-code-first) | v6    | [v2-preview](https://github.com/prisma/prisma2) | [Code-first](https://github.com/19majkel94/type-graphql)              |
-| [nest-6-code-first](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-6-code-first)         | v6    | [v1](https://github.com/prisma/prisma)               | [Code-first](https://github.com/19majkel94/type-graphql)              |
-| [nest-6-sdl-first](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-6-sdl-first)                                                                                        | v6    | [v1](https://github.com/prisma/prisma)               | [SDL First](https://docs.nestjs.com/graphql/quick-start#schema-first) |
-| [nest-5](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-5)                     | v5    | [v1](https://github.com/prisma/prisma)               | [SDL First](https://docs.nestjs.com/graphql/quick-start#schema-first) |
+| [nest-6-code-first](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-6-code-first)                 | v6    | [v1](https://github.com/prisma/prisma)          | [Code-first](https://github.com/19majkel94/type-graphql)              |
+| [nest-6-sdl-first](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-6-sdl-first)                   | v6    | [v1](https://github.com/prisma/prisma)          | [SDL First](https://docs.nestjs.com/graphql/quick-start#schema-first) |
+| [nest-5](https://github.com/fivethree-team/nestjs-prisma-starter/tree/nest-5)                                       | v5    | [v1](https://github.com/prisma/prisma)          | [SDL First](https://docs.nestjs.com/graphql/quick-start#schema-first) |
 
 ## Features
 
@@ -450,7 +450,7 @@ export class TokenInterceptor implements HttpInterceptor {
 
   intercept(
     req: HttpRequest<any>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<any>> {
     const token = 'YOUR_TOKEN'; // get from local storage
     if (token !== undefined) {
@@ -496,16 +496,16 @@ Large Data Sets: When fetching large data sets where pagination and caching are 
 Example Scenarios
 
 1. Fetching a List of Blogs (Large Data Set)
-Use REST: Fetching a large list of blogs can benefit from REST's built-in support for pagination and caching.
+   Use REST: Fetching a large list of blogs can benefit from REST's built-in support for pagination and caching.
 2. Fetching a User with Related Data (Complex Query)
-Use GraphQL: Fetching a user along with their posts and comments in a single request.
+   Use GraphQL: Fetching a user along with their posts and comments in a single request.
 3. Creating or Updating a User Profile (Simple CRUD)
-Use REST: Simple create or update operations can be handled efficiently with REST.
+   Use REST: Simple create or update operations can be handled efficiently with REST.
 4. Real-time Notifications (Real-time Data)
-Use GraphQL: Subscriptions can be used to receive real-time notifications.
-Implementation Example
-REST API for Blogs
-File: src/blogs/blogs.controller.ts
+   Use GraphQL: Subscriptions can be used to receive real-time notifications.
+   Implementation Example
+   REST API for Blogs
+   File: src/blogs/blogs.controller.ts
 
 GraphQL API for Users
 File: users.resolver.ts

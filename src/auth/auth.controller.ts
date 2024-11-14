@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res } from '@nestjs/common';
+import { Controller, Post, Body, Res, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignupInput } from './dto/signup.input';
 import { LoginInput } from './dto/login.input';
@@ -8,13 +8,13 @@ import { ApiTags, ApiBody } from '@nestjs/swagger';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('signup')
   async signup(@Body() payload: SignupInput, @Res() res: Response) {
     const credentials = await this.authService.createUser({
-      ...data,
-      email: data.email.toLowerCase(),
+      ...payload,
+      email: payload.email.toLowerCase(),
     });
     res.cookie('refreshToken', credentials.refreshToken, {
       httpOnly: true,
@@ -47,8 +47,8 @@ export class AuthController {
   }
 
   @Post('refresh-token')
-  async refreshToken(@Res() res: Response) {
-    const refreshToken = res.cookies['refreshToken'];
+  async refreshToken(@Req() req, @Res() res: Response) {
+    const refreshToken = req.cookies['refreshToken'];
     const credentials = await this.authService.refreshToken(refreshToken);
     return res.send({ accessToken: credentials.accessToken });
   }

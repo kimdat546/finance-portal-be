@@ -10,4 +10,207 @@ Table users {
   avatarUrl String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  wallets wallets [not null]
+  categories categories [not null]
+  transactions transactions [not null]
+  budgets budgets [not null]
+  notifications notifications [not null]
+  debts debts [not null]
+  savingsPlans savings_plans [not null]
+  investments investments [not null]
 }
+
+Table wallets {
+  id String [pk]
+  userId String [not null]
+  name String
+  bankName String
+  accountNumber String [unique]
+  walletType WalletType [not null]
+  balance Decimal [not null, default: 0]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user users [not null]
+  cards cards [not null]
+  budget budgets [not null]
+  transactions transactions [not null]
+  BalanceHistory balance_history [not null]
+}
+
+Table categories {
+  id String [pk]
+  userId String [not null]
+  name String [not null]
+  icon String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user users [not null]
+  transactions transactions [not null]
+  budgets budgets [not null]
+}
+
+Table cards {
+  id String [pk]
+  walletId String [not null]
+  cardType CardType [not null]
+  cardNumber String [unique, not null]
+  expirationDate DateTime
+  cardProvider CardProvider
+  creditLimit Decimal
+  cashbackRate Decimal
+  pointsRate Decimal
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  wallet wallets [not null]
+}
+
+Table transactions {
+  id String [pk]
+  userId String [not null]
+  walletId String [not null]
+  categoryId String
+  debtId String
+  savingsPlanId String
+  amount Decimal [not null]
+  description String
+  transactionType TransactionType [not null]
+  recipientAccount String
+  refNumber String
+  date DateTime [default: `now()`, not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user users [not null]
+  wallet wallets [not null]
+  category categories
+  debt debts
+  savingsPlan savings_plans
+}
+
+Table budgets {
+  id String [pk]
+  userId String [not null]
+  categoryId String
+  walletId String
+  amount Decimal [not null]
+  startDate DateTime
+  endDate DateTime
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user users [not null]
+  category categories
+  wallet wallets
+}
+
+Table notifications {
+  id String [pk]
+  userId String [not null]
+  message String [not null]
+  triggerDate DateTime [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user users [not null]
+}
+
+Table debts {
+  id String [pk]
+  userId String [not null]
+  lenderName String [not null]
+  amount Decimal [not null]
+  dueDate DateTime
+  repaid Boolean [not null, default: false]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user users [not null]
+  Transaction transactions [not null]
+}
+
+Table savings_plans {
+  id String [pk]
+  userId String [not null]
+  goalName String [not null]
+  targetAmount Decimal [not null]
+  currentAmount Decimal [not null, default: 0]
+  targetDate DateTime
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user users [not null]
+  Transaction transactions [not null]
+}
+
+Table investments {
+  id String [pk]
+  userId String [not null]
+  assetName String [not null]
+  investedAmount Decimal [not null]
+  currentValue Decimal
+  purchaseDate DateTime
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user users [not null]
+}
+
+Table balance_history {
+  id String [pk]
+  walletId String [not null]
+  balance Decimal [not null]
+  date DateTime [default: `now()`, not null]
+  createdAt DateTime [default: `now()`, not null]
+  wallet wallets [not null]
+}
+
+Enum WalletType {
+  BANK
+  E_WALLET
+}
+
+Enum CardType {
+  CREDIT
+  DEBIT
+}
+
+Enum CardProvider {
+  VISA
+  MASTERCARD
+  AMERICAN_EXPRESS
+  DISCOVER
+  JCB
+  DINERS_CLUB
+}
+
+Enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
+}
+
+Ref: wallets.userId > users.id
+
+Ref: categories.userId > users.id
+
+Ref: cards.walletId > wallets.id
+
+Ref: transactions.userId > users.id
+
+Ref: transactions.walletId > wallets.id
+
+Ref: transactions.categoryId > categories.id
+
+Ref: transactions.debtId > debts.id
+
+Ref: transactions.savingsPlanId > savings_plans.id
+
+Ref: budgets.userId > users.id
+
+Ref: budgets.categoryId > categories.id
+
+Ref: budgets.walletId > wallets.id
+
+Ref: notifications.userId > users.id
+
+Ref: debts.userId > users.id
+
+Ref: savings_plans.userId > users.id
+
+Ref: investments.userId > users.id
+
+Ref: balance_history.walletId > wallets.id
