@@ -20,7 +20,7 @@ export class GqlConfigService implements GqlOptionsFactory {
       installSubscriptionHandlers: true,
       includeStacktraceInErrorResponses: graphqlConfig.debug,
       playground: graphqlConfig.playgroundEnabled,
-      context: ({ req }) => ({ req }),
+      context: ({ req, res }) => ({ req, res }),
     };
   }
 }
