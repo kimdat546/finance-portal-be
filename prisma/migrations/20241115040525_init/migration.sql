@@ -1,3 +1,6 @@
+-- CreateExtension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- CreateEnum
 CREATE TYPE "WalletType" AS ENUM ('BANK', 'E_WALLET');
 
@@ -9,6 +12,19 @@ CREATE TYPE "CardProvider" AS ENUM ('VISA', 'MASTERCARD', 'AMERICAN_EXPRESS', 'D
 
 -- CreateEnum
 CREATE TYPE "TransactionType" AS ENUM ('INCOME', 'EXPENSE', 'TRANSFER');
+
+-- CreateTable
+CREATE TABLE "users" (
+    "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "avatar_url" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "wallets" (
@@ -153,6 +169,9 @@ CREATE TABLE "balance_history" (
 
     CONSTRAINT "balance_history_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "wallets_account_number_key" ON "wallets"("account_number");
