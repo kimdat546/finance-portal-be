@@ -5,6 +5,7 @@ const config: Config = {
     port: 3000,
   },
   cors: {
+    originDomain: process.env.ORIGIN_DOMAIN.split(','),
     enabled: true,
   },
   swagger: {
@@ -21,7 +22,7 @@ const config: Config = {
     sortSchema: true,
   },
   security: {
-    expiresIn: '2m',
+    expiresIn: '8h',
     refreshIn: '7d',
     bcryptSaltOrRound: 10,
   },

@@ -1,17 +1,17 @@
+# Example: http://localhost:3000/graphql
+# query Me {
+#   me {
+#     id
+#     email
+#     name
+#   }
+# }
+# {
+#   "Authorization": "Bearer YOUR_ACCESS_TOKEN"
+# }
+
 query Me {
   me {
-    ...UserData
-  }
-}
-
-mutation UpdateUser {
-  updateUser(data: { name: "Bart" }) {
-    ...UserData
-  }
-}
-
-mutation ChangePassword {
-  changePassword(data: { oldPassword: "secret42", newPassword: "secret42" }) {
     ...UserData
   }
 }

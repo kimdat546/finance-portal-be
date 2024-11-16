@@ -1,14 +1,27 @@
-import { Controller, Get, Param, Patch, Body } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UpdateUserInput } from './dto/update-user.input';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { ChangePasswordInput } from './dto/change-password.input';
+import { UpdateUserInput } from './dto/update-user.input';
+import { UsersService } from './users.service';
 
+@ApiTags('Users')
+@ApiBearerAuth('defaultBearerAuth')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll() {
+  async findAll(@Request() req) {
     return this.usersService.findAll();
   }
 

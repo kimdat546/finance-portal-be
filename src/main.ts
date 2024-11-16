@@ -45,7 +45,10 @@ async function bootstrap() {
       .setTitle(swaggerConfig.title || 'Nestjs')
       .setDescription(swaggerConfig.description || 'The nestjs API description')
       .setVersion(swaggerConfig.version || '1.0')
-      // .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
+      .addBearerAuth(
+        { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+        'defaultBearerAuth',
+      )
       .build();
     const document = SwaggerModule.createDocument(app, options);
 
@@ -54,7 +57,7 @@ async function bootstrap() {
   // Cors
   if (corsConfig.enabled) {
     app.enableCors({
-      origin: 'http://127.0.0.1:5173',
+      origin: corsConfig.originDomain,
       credentials: true,
     });
   }

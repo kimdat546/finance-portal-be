@@ -12,6 +12,7 @@ export interface NestConfig {
 
 export interface CorsConfig {
   enabled: boolean;
+  originDomain: string[];
 }
 
 export interface SwaggerConfig {
