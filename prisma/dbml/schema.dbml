@@ -84,6 +84,7 @@ Table transactions {
   category categories
   debt debts
   savingsPlan savings_plans
+  BalanceHistory balance_history
 }
 
 Table budgets {
@@ -152,10 +153,12 @@ Table investments {
 Table balance_history {
   id String [pk]
   walletId String [not null]
+  transactionId String [unique, not null]
   balance Decimal [not null]
   date DateTime [default: `now()`, not null]
   createdAt DateTime [default: `now()`, not null]
   wallet wallets [not null]
+  transaction transactions [not null]
 }
 
 Enum WalletType {
@@ -214,3 +217,5 @@ Ref: savings_plans.userId > users.id
 Ref: investments.userId > users.id
 
 Ref: balance_history.walletId > wallets.id
+
+Ref: balance_history.transactionId - transactions.id

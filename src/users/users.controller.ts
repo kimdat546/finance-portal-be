@@ -1,11 +1,11 @@
 import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Patch,
-  Request,
-  UseGuards,
+	Body,
+	Controller,
+	Get,
+	Param,
+	Patch,
+	Request,
+	UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
@@ -17,33 +17,33 @@ import { UsersService } from './users.service';
 @ApiBearerAuth('defaultBearerAuth')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+	constructor(private readonly usersService: UsersService) { }
 
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  async findAll(@Request() req) {
-    return this.usersService.findAll();
-  }
+	@UseGuards(JwtAuthGuard)
+	@Get()
+	async findAll(@Request() req) {
+		return this.usersService.findAll();
+	}
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
-  }
+	@Get(':id')
+	async findOne(@Param('id') id: string) {
+		return this.usersService.findOne(id);
+	}
 
-  @Patch(':id')
-  async updateUser(
-    @Param('id') id: string,
-    @Body() newUserData: UpdateUserInput,
-  ) {
-    return this.usersService.updateUser(id, newUserData);
-  }
+	@Patch(':id')
+	async updateUser(
+		@Param('id') id: string,
+		@Body() newUserData: UpdateUserInput,
+	) {
+		return this.usersService.updateUser(id, newUserData);
+	}
 
-  @Patch(':id/change-password')
-  async changePassword(
-    @Param('id') id: string,
-    @Body() changePassword: ChangePasswordInput,
-  ) {
-    const user = await this.usersService.findOne(id);
-    return this.usersService.changePassword(id, user.password, changePassword);
-  }
+	@Patch(':id/change-password')
+	async changePassword(
+		@Param('id') id: string,
+		@Body() changePassword: ChangePasswordInput,
+	) {
+		const user = await this.usersService.findOne(id);
+		return this.usersService.changePassword(id, user.password, changePassword);
+	}
 }

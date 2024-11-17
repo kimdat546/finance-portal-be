@@ -7,34 +7,38 @@ import { AppService } from './app.service';
 import { AppResolver } from './app.resolver';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { WalletsModule } from './wallets/wallets.module';
+import { TransactionsModule } from './transactions/transactions.module';
 import config from './common/configs/config';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GqlConfigService } from './gql-config.service';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [config] }),
-    PrismaModule.forRoot({
-      isGlobal: true,
-      prismaServiceOptions: {
-        middlewares: [
-          // configure your prisma middleware
-          loggingMiddleware({
-            logger: new Logger('PrismaMiddleware'),
-            logLevel: 'log',
-          }),
-        ],
-      },
-    }),
+	imports: [
+		ConfigModule.forRoot({ isGlobal: true, load: [config] }),
+		PrismaModule.forRoot({
+			isGlobal: true,
+			prismaServiceOptions: {
+				middlewares: [
+					// configure your prisma middleware
+					loggingMiddleware({
+						logger: new Logger('PrismaMiddleware'),
+						logLevel: 'log',
+					}),
+				],
+			},
+		}),
 
-    GraphQLModule.forRootAsync<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      useClass: GqlConfigService,
-    }),
-    AuthModule,
-    UsersModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService, AppResolver],
+		GraphQLModule.forRootAsync<ApolloDriverConfig>({
+			driver: ApolloDriver,
+			useClass: GqlConfigService,
+		}),
+		AuthModule,
+		UsersModule,
+		WalletsModule,
+		TransactionsModule,
+	],
+	controllers: [AppController],
+	providers: [AppService, AppResolver],
 })
-export class AppModule {}
+export class AppModule { }
