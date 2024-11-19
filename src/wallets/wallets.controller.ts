@@ -31,6 +31,11 @@ export class WalletsController {
 		return this.walletsService.findAll();
 	}
 
+	@Get('me')
+	findByUserId(@Request() req) {
+		return this.walletsService.findByUserId(req.user.id);
+	}
+
 	@Get(':id')
 	findOne(@Param('id') id: string) {
 		return this.walletsService.findOne(id);

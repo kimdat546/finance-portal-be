@@ -21,6 +21,10 @@ export class WalletsService {
 		return this.prisma.wallet.findUnique({ where: { id } });
 	}
 
+	async findByUserId(userId: string) {
+		return this.prisma.wallet.findMany({ where: { userId } });
+	}
+
 	update(id: string, payload: Partial<CreateWalletDto>) {
 		return this.prisma.wallet.update({
 			where: { id },
