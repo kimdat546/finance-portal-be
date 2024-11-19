@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UploadTransactionsDto } from './dto/upload-transactions.dto';
+import { PaginationDto } from './dto/pagination.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class TransactionsService {
@@ -13,8 +15,48 @@ export class TransactionsService {
 		});
 	}
 
-	async findAll() {
-		return this.prisma.transaction.findMany();
+	async findAll(paginationDto: PaginationDto) {
+		const { page = 0, pageSize = 10, search } = paginationDto;
+		const skip = page * pageSize;
+		const take = pageSize;
+
+		const where: Prisma.TransactionWhereInput = search
+			? {
+				OR: [
+					{
+						description: {
+							contains: search,
+							mode: Prisma.QueryMode.insensitive,
+						},
+					},
+					{
+						refNumber: {
+							contains: search,
+							mode: Prisma.QueryMode.insensitive,
+						},
+					},
+				],
+			}
+			: {};
+
+		const [transactions, total] = await this.prisma.$transaction([
+			this.prisma.transaction.findMany({
+				skip,
+				take,
+				where,
+				include: {
+					BalanceHistory: true,
+				},
+			}),
+			this.prisma.transaction.count({ where }),
+		]);
+
+		return {
+			data: transactions,
+			total,
+			page,
+			pageSize,
+		};
 	}
 
 	async findOne(id: string) {
@@ -41,7 +83,6 @@ export class TransactionsService {
 		userId: string,
 	) {
 		const { transactions } = uploadTransactionsDto;
-		console.log('transactions', transactions);
 		const createdTransactions = await this.prisma.$transaction(
 			transactions.map(({ walletId, balance, ...transaction }) =>
 				this.prisma.transaction.create({
@@ -53,7 +94,6 @@ export class TransactionsService {
 				}),
 			),
 		);
-		console.log('createdTransactions', createdTransactions);
 
 		await Promise.all(
 			createdTransactions.map((transaction, index) =>

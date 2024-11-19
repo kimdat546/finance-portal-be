@@ -6,14 +6,16 @@ import {
 	Param,
 	Patch,
 	Post,
+	Query,
 	Req,
 	UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { TransactionsService } from './transactions.service';
+import { PaginationDto } from './dto/pagination.dto';
 import { UploadTransactionsDto } from './dto/upload-transactions.dto';
+import { TransactionsService } from './transactions.service';
 
 @ApiTags('Transactions')
 @UseGuards(JwtAuthGuard)
@@ -28,8 +30,8 @@ export class TransactionsController {
 	}
 
 	@Get()
-	findAll() {
-		return this.transactionsService.findAll();
+	findAll(@Query() paginationDto: PaginationDto) {
+		return this.transactionsService.findAll(paginationDto);
 	}
 
 	@Get(':id')
