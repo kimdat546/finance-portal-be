@@ -8,6 +8,7 @@ import { AppResolver } from './app.resolver';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { WalletsModule } from './wallets/wallets.module';
+import { CategoriesModule } from './categories/categories.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import config from './common/configs/config';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
@@ -37,6 +38,7 @@ import { GqlConfigService } from './gql-config.service';
 		UsersModule,
 		WalletsModule,
 		TransactionsModule,
+		CategoriesModule,
 	],
 	controllers: [AppController],
 	providers: [AppService, AppResolver],

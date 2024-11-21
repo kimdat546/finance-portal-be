@@ -49,6 +49,7 @@ export class AuthController {
 	@Post('refresh-token')
 	async refreshToken(@Req() req, @Res() res: Response) {
 		const refreshToken = req.cookies['refreshToken'];
+		console.log("refreshToken", refreshToken);
 		const credentials = await this.authService.refreshToken(refreshToken);
 		return res.send({ accessToken: credentials.accessToken });
 	}

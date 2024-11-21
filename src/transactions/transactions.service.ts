@@ -16,28 +16,40 @@ export class TransactionsService {
 	}
 
 	async findAll(paginationDto: PaginationDto) {
-		const { page = 0, pageSize = 10, search } = paginationDto;
+		const {
+			page = 0,
+			pageSize = 10,
+			search,
+			transactionType,
+			categoryId,
+		} = paginationDto;
 		const skip = page * pageSize;
 		const take = pageSize;
 
-		const where: Prisma.TransactionWhereInput = search
-			? {
-				OR: [
-					{
-						description: {
-							contains: search,
-							mode: Prisma.QueryMode.insensitive,
-						},
-					},
-					{
-						refNumber: {
-							contains: search,
-							mode: Prisma.QueryMode.insensitive,
-						},
-					},
-				],
-			}
-			: {};
+		const where: Prisma.TransactionWhereInput = {
+			AND: [
+				search
+					? {
+						OR: [
+							{
+								description: {
+									contains: search,
+									mode: Prisma.QueryMode.insensitive,
+								},
+							},
+							{
+								refNumber: {
+									contains: search,
+									mode: Prisma.QueryMode.insensitive,
+								},
+							},
+						],
+					}
+					: {},
+				transactionType ? { transactionType: { in: transactionType } } : {},
+				categoryId ? { categoryId: { in: categoryId } } : {},
+			],
+		};
 
 		const [transactions, total] = await this.prisma.$transaction([
 			this.prisma.transaction.findMany({

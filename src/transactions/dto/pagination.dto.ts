@@ -1,6 +1,14 @@
-import { IsOptional, IsString, IsInt, Min } from 'class-validator';
+import {
+	IsOptional,
+	IsString,
+	IsInt,
+	Min,
+	IsArray,
+	IsEnum,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
+import { TransactionType } from '@prisma/client';
 
 export class PaginationDto {
 	@IsOptional()
@@ -21,4 +29,21 @@ export class PaginationDto {
 	@IsString()
 	@ApiProperty({ example: '', required: false })
 	search?: string;
+
+	@IsOptional()
+	@IsArray()
+	@IsEnum(TransactionType, { each: true })
+	@ApiProperty({
+		example: [TransactionType.EXPENSE],
+		enum: TransactionType,
+		isArray: true,
+		required: false,
+	})
+	transactionType?: TransactionType[];
+
+	@IsOptional()
+	@IsArray()
+	@IsString({ each: true })
+	@ApiProperty({ example: ['category-id-1', 'category-id-2'], required: false })
+	categoryId?: string[];
 }
